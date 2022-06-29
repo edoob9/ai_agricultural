@@ -1,3 +1,4 @@
+# 현재, 하위 디렉토리를 모두 포함하여 파일/폴더 탐색 반환
 def load_image(file_name):
     img = Image.open(file_name)
     img = img.resize((64, 64)).convert('RGB')

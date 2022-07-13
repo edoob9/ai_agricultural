@@ -1,10 +1,33 @@
-### < 저자가 논문을 쓰게 된 이유>
+## < 저자가 논문을 쓰게 된 이유>
 CNNs을 기반으로 하는 Deep neural model은 이미지 분류, object detection 등 다양한 CV task에서 훌륭한 성능을 보여줬습니다. 이러한 모델들이 좋은 성능을 가능하게 만들었지만, 이들의 각각의 직관적인 
 요소로의 decomposability(모델의 분해가능성)의 부족은 이들을 해석하기 어렵게 만들었습니다.
 -> 지능형 시스템에 있어서 신뢰를 구축하기 위해서는 왜 그렇게 예측했는지를 설명할 능력이 있는 <strong>Transparent Models(interpretable model)</strong>이 필요했다. 
 아래와 같은 방식으로 설계에 의해 얼마나 이해 및 설명 가능한지 확인할 수 있다.
 -  algorithmic transparency은 선형모델이 얼마나 이해하기 쉬우며, 비선형 모델은 조금 더 정교한 모델이 필요
 -  decomposabilitysms는 모델 내 각 부분의 설명이 얼마나 intelligent한가다.
+
+### Class Activation Map(CAM)
+
+- CNN + CAM 구조
+    - convolution layer와 pooling layer를 활용해서 이미지 내 정보를 요약한다.
+    - 마지막(최종) 연산으로 된 feature map이 있는데, GAP를 진행한다.
+### <CAM 구조의 한계점>
+
+- GAP layer를 반드시 사용한다
+- 뒷부분에 대한 또 다시 fine tuning을 해줘야한다.
+- 마지막 convolutional layer에서만 CAM 추출 가능
+  Grad-CAM은 여기에서 GAP(Global average pooling)를 사용하지않는다면? 어떻게 할까? 라는 생각에서 진행하는 것이다.
+
+  → feature map별 weight를 학습시킬 수 없다.
+
+  → 그래서, 가중치 구하는 방법을 바꾸자!
+
+  feature map의 각 원소가 특정 class에 주는 영향력을 gradient하는 것이다.=(gradient를 통해서 feature map의 가중치 계산한다.)
+
+CAM과 Grad-CAM의 차이점은 weight를 구하는 방법이 다르다!
+  → Grad-CAM은 다른 방법을 사용한다.
+
+how? : GAP 사용 안하고, CNN 구조를 변경하지 않고 사용한다. 그리고 gradient는 특정 class(output)에 특정 input이 주는 영향력이 있다.=(미분의 개념 사용)
 
 따라서 오늘날의 지능형 시스템은 어떠한 경고나 설명 없이 실패하는 경우가 많으며, 이는 사용자가 지능형 시스템의 일관성 없는 output을 보면서 시스템이 왜 그런 의사결정을 했는지에 대해서 궁금하게 됩니다.
 
